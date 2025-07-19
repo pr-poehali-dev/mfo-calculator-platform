@@ -35,6 +35,7 @@ function Index() {
             <a href="#calculator" className="text-gray-700 hover:text-blue-600 transition-colors">Калькулятор</a>
             <a href="#services" className="text-gray-700 hover:text-blue-600 transition-colors">Услуги</a>
             <a href="#documents" className="text-gray-700 hover:text-blue-600 transition-colors">Документы</a>
+            <a href="#integration" className="text-gray-700 hover:text-blue-600 transition-colors">Интеграция</a>
             <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">Контакты</a>
           </nav>
           <Button onClick={() => setShowLoginModal(true)} className="bg-blue-600 hover:bg-blue-700 rounded-2xl">
@@ -239,6 +240,158 @@ function Index() {
               <h3 className="font-bold mb-2">Справка</h3>
               <p className="text-gray-600 text-sm">О доходах (при необходимости)</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Integration Section */}
+      <section id="integration" className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Интеграция и партнеры</h2>
+            <p className="text-xl text-gray-600">Подключаемся к ведущим платформам и сервисам</p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+            {/* API Integration */}
+            <Card className="rounded-3xl border-0 shadow-xl bg-white/80 backdrop-blur-md">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center mr-4">
+                    <Icon name="Code" size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold">API интеграция</h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  REST API для интеграции с вашими системами. Полная документация и SDK для быстрого подключения.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>RESTful API с JWT авторизацией</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Webhook уведомления в реальном времени</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>SDK для популярных языков программирования</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Песочница для тестирования</span>
+                  </div>
+                </div>
+                <Button className="mt-6 bg-purple-600 hover:bg-purple-700 rounded-2xl">
+                  Документация API
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Bank Integration */}
+            <Card className="rounded-3xl border-0 shadow-xl bg-white/80 backdrop-blur-md">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-600 to-green-700 rounded-2xl flex items-center justify-center mr-4">
+                    <Icon name="Landmark" size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold">Банковская интеграция</h3>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Прямое подключение к банковским системам для мгновенных переводов и проверки платежеспособности.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Open Banking API</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Проверка кредитной истории в БКИ</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Мгновенные переводы СБП</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Автоматическое списание платежей</span>
+                  </div>
+                </div>
+                <Button className="mt-6 bg-green-600 hover:bg-green-700 rounded-2xl">
+                  Подключить банк
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Partners Grid */}
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Наши технологические партнеры</h3>
+            <p className="text-gray-600">Интеграция с ведущими финтех-решениями</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="rounded-3xl border-0 shadow-lg bg-white/60 backdrop-blur-sm p-6 text-center hover:shadow-xl transition-all">
+              <Icon name="Smartphone" size={48} className="text-blue-600 mx-auto mb-4" />
+              <h4 className="font-bold mb-2">Мобильные платежи</h4>
+              <p className="text-sm text-gray-600">Apple Pay, Google Pay, Samsung Pay</p>
+            </Card>
+            
+            <Card className="rounded-3xl border-0 shadow-lg bg-white/60 backdrop-blur-sm p-6 text-center hover:shadow-xl transition-all">
+              <Icon name="CreditCard" size={48} className="text-green-600 mx-auto mb-4" />
+              <h4 className="font-bold mb-2">Платежные системы</h4>
+              <p className="text-sm text-gray-600">Visa, MasterCard, МИР, ЮMoney</p>
+            </Card>
+            
+            <Card className="rounded-3xl border-0 shadow-lg bg-white/60 backdrop-blur-sm p-6 text-center hover:shadow-xl transition-all">
+              <Icon name="Shield" size={48} className="text-purple-600 mx-auto mb-4" />
+              <h4 className="font-bold mb-2">Верификация</h4>
+              <p className="text-sm text-gray-600">Госуслуги, БКИ, ФССП, МВД</p>
+            </Card>
+            
+            <Card className="rounded-3xl border-0 shadow-lg bg-white/60 backdrop-blur-sm p-6 text-center hover:shadow-xl transition-all">
+              <Icon name="MessageSquare" size={48} className="text-orange-600 mx-auto mb-4" />
+              <h4 className="font-bold mb-2">Уведомления</h4>
+              <p className="text-sm text-gray-600">SMS, Email, Push, Telegram</p>
+            </Card>
+          </div>
+
+          {/* Integration Examples */}
+          <div className="mt-16">
+            <Card className="rounded-3xl border-0 shadow-xl bg-gradient-to-r from-gray-50 to-blue-50 backdrop-blur-md">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold text-center mb-8">Схема интеграции</h3>
+                <div className="grid md:grid-cols-3 gap-8 items-center">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-blue-700 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                      <Icon name="Database" size={32} className="text-white" />
+                    </div>
+                    <h4 className="font-bold mb-2">Ваша система</h4>
+                    <p className="text-sm text-gray-600">CRM, ERP, веб-сайт</p>
+                  </div>
+                  
+                  <div className="flex justify-center">
+                    <Icon name="ArrowRight" size={32} className="text-gray-400" />
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-green-700 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                      <Icon name="Zap" size={32} className="text-white" />
+                    </div>
+                    <h4 className="font-bold mb-2">Наш API</h4>
+                    <p className="text-sm text-gray-600">REST API, Webhook</p>
+                  </div>
+                </div>
+                
+                <div className="mt-8 text-center">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl px-8">
+                    Начать интеграцию
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
