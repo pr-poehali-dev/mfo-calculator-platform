@@ -344,11 +344,16 @@ function Index() {
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl flex items-center justify-center">
-              <Icon name="CreditCard" size={24} className="text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl flex items-center justify-center">
+              <Icon name="Home" size={28} className="text-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">МикроФинанс</span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                Деньги в дом
+              </span>
+              <span className="text-xs text-gray-500 -mt-1">Быстрые займы онлайн</span>
+            </div>
           </div>
           <nav className="hidden md:flex space-x-8">
             <a href="#calculator" className="text-gray-700 hover:text-blue-600 transition-colors">Калькулятор</a>
@@ -368,14 +373,14 @@ function Index() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <h1 className="text-5xl font-bold text-gray-900 leading-tight">
-              Быстрые займы
+              Деньги к вам 
               <br />
               <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                без лишних вопросов
+                прямо домой
               </span>
             </h1>
             <p className="text-xl text-gray-600">
-              Получите деньги уже сегодня. Минимум документов, максимум удобства. 
+              Быстрые займы с доставкой на дом или карту. Минимум документов, максимум удобства. 
               От 5 000 до 500 000 рублей на срок до 365 дней.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -737,11 +742,11 @@ function Index() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-green-600 rounded-2xl flex items-center justify-center">
-                  <Icon name="CreditCard" size={20} className="text-white" />
+                  <Icon name="Home" size={20} className="text-white" />
                 </div>
-                <span className="text-xl font-bold">МикроФинанс</span>
+                <span className="text-xl font-bold">Деньги в дом</span>
               </div>
-              <p className="text-gray-400">Надежный партнер в мире финансов</p>
+              <p className="text-gray-400">Доставляем деньги прямо к вам домой</p>
             </div>
             
             <div>
@@ -775,7 +780,7 @@ function Index() {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 МикроФинанс. Все права защищены.</p>
+            <p>&copy; 2024 Деньги в дом. Все права защищены.</p>
           </div>
         </div>
       </footer>
