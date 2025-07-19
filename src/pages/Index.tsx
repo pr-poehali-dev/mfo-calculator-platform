@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
 import Icon from '@/components/ui/icon'
 
 function Index() {
@@ -11,6 +12,19 @@ function Index() {
   const [loanTerm, setLoanTerm] = useState(30)
   const [monthlyPayment, setMonthlyPayment] = useState(0)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  
+  // Состояния для многошаговой формы
+  const [applicationStep, setApplicationStep] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    passport: '',
+    email: '',
+    income: '',
+    amount: 50000,
+    term: 30
+  })
 
   // Расчет ежемесячного платежа
   const calculatePayment = () => {
@@ -18,6 +32,311 @@ function Index() {
     const n = loanTerm
     const payment = (loanAmount * rate * Math.pow(1 + rate, n)) / (Math.pow(1 + rate, n) - 1)
     setMonthlyPayment(Math.round(payment))
+  }
+
+  // Функции для работы с формой заявки
+  const nextStep = () => {
+    if (applicationStep < 4) {
+      setIsLoading(true)
+      setTimeout(() => {
+        setApplicationStep(applicationStep + 1)
+        setIsLoading(false)
+      }, 2000)
+    }
+  }
+
+  const submitApplication = () => {
+    setIsLoading(true)
+    setTimeout(() => {
+      setApplicationStep(4) // Финальный этап
+      setIsLoading(false)
+    }, 3000)
+  }
+
+  const renderApplicationForm = () => {
+    const steps = [
+      'Идентификация',
+      'Загрузка данных',
+      'Ожидание',
+      'Анкета',
+      'Готово'
+    ]
+
+    if (isLoading) {
+      return (
+        <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-8">
+          <CardContent className="text-center">
+            <div className="animate-spin w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-6"></div>
+            <h3 className="text-xl font-bold mb-2">
+              {applicationStep === 0 && "Проверяем данные..."}
+              {applicationStep === 1 && "Загружаем информацию..."}
+              {applicationStep === 2 && "Обрабатываем заявку..."}
+              {applicationStep === 3 && "Оформляем займ..."}
+            </h3>
+            <p className="text-gray-600">Пожалуйста, подождите</p>
+            <Progress value={(applicationStep + 1) * 20} className="mt-4" />
+          </CardContent>
+        </Card>
+      )
+    }
+
+    switch (applicationStep) {
+      case 0: // Идентификация
+        return (
+          <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-center text-gray-900 flex items-center justify-center">
+                <Icon name="UserCheck" className="mr-2" />
+                Идентификация
+              </CardTitle>
+              <Progress value={20} className="mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="name">ФИО *</Label>
+                <Input 
+                  id="name" 
+                  placeholder="Иванов Иван Иванович" 
+                  className="rounded-2xl"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="phone">Телефон *</Label>
+                <Input 
+                  id="phone" 
+                  placeholder="+7 (999) 123-45-67" 
+                  className="rounded-2xl"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="passport">Серия и номер паспорта *</Label>
+                <Input 
+                  id="passport" 
+                  placeholder="1234 567890" 
+                  className="rounded-2xl"
+                  value={formData.passport}
+                  onChange={(e) => setFormData({...formData, passport: e.target.value})}
+                />
+              </div>
+              <Button 
+                onClick={nextStep}
+                disabled={!formData.name || !formData.phone || !formData.passport}
+                className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl"
+              >
+                Продолжить
+              </Button>
+            </CardContent>
+          </Card>
+        )
+
+      case 1: // Загрузка данных
+        return (
+          <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-center text-gray-900 flex items-center justify-center">
+                <Icon name="Upload" className="mr-2" />
+                Дополнительные данные
+              </CardTitle>
+              <Progress value={40} className="mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input 
+                  id="email" 
+                  type="email"
+                  placeholder="ivan@example.com" 
+                  className="rounded-2xl"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="income">Ежемесячный доход (₽)</Label>
+                <Input 
+                  id="income" 
+                  placeholder="50 000" 
+                  className="rounded-2xl"
+                  value={formData.income}
+                  onChange={(e) => setFormData({...formData, income: e.target.value})}
+                />
+              </div>
+              <div className="bg-blue-50 p-4 rounded-2xl">
+                <h4 className="font-semibold mb-2">Загрузка документов</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Паспорт (фото)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Справка о доходах</span>
+                  </div>
+                </div>
+              </div>
+              <Button 
+                onClick={nextStep}
+                className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl"
+              >
+                Загрузить данные
+              </Button>
+            </CardContent>
+          </Card>
+        )
+
+      case 2: // Ожидание
+        return (
+          <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-center text-gray-900 flex items-center justify-center">
+                <Icon name="Clock" className="mr-2" />
+                Проверка заявки
+              </CardTitle>
+              <Progress value={60} className="mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-4 text-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="SearchCheck" size={32} className="text-white" />
+              </div>
+              <h3 className="text-lg font-semibold">Анализируем вашу заявку</h3>
+              <p className="text-gray-600">
+                Проверяем кредитную историю и платежеспособность. 
+                Обычно это занимает 2-5 минут.
+              </p>
+              <div className="bg-gray-50 p-4 rounded-2xl text-left">
+                <h4 className="font-semibold mb-2">Что мы проверяем:</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Кредитная история в БКИ</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Проверка в ФССП</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-600 mr-2" />
+                    <span>Анализ платежеспособности</span>
+                  </div>
+                </div>
+              </div>
+              <Button 
+                onClick={nextStep}
+                className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl"
+              >
+                Продолжить проверку
+              </Button>
+            </CardContent>
+          </Card>
+        )
+
+      case 3: // Анкета
+        return (
+          <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-center text-gray-900 flex items-center justify-center">
+                <Icon name="FileText" className="mr-2" />
+                Параметры займа
+              </CardTitle>
+              <Progress value={80} className="mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Сумма займа: {formData.amount.toLocaleString()} ₽</Label>
+                <input
+                  type="range"
+                  min="5000"
+                  max="500000"
+                  step="5000"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: Number(e.target.value)})}
+                  className="w-full h-3 bg-gray-200 rounded-2xl appearance-none cursor-pointer slider"
+                />
+              </div>
+              <div>
+                <Label>Срок займа: {formData.term} дней</Label>
+                <input
+                  type="range"
+                  min="7"
+                  max="365"
+                  step="7"
+                  value={formData.term}
+                  onChange={(e) => setFormData({...formData, term: Number(e.target.value)})}
+                  className="w-full h-3 bg-gray-200 rounded-2xl appearance-none cursor-pointer slider"
+                />
+              </div>
+              <div className="bg-green-50 p-4 rounded-2xl">
+                <h4 className="font-semibold text-green-800 mb-2">Одобрено!</h4>
+                <div className="text-sm text-green-700">
+                  <p>Сумма: {formData.amount.toLocaleString()} ₽</p>
+                  <p>Срок: {formData.term} дней</p>
+                  <p>Ставка: 0.8% в день</p>
+                </div>
+              </div>
+              <Button 
+                onClick={submitApplication}
+                className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 rounded-2xl"
+              >
+                Оформить займ
+              </Button>
+            </CardContent>
+          </Card>
+        )
+
+      case 4: // Готово
+        return (
+          <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
+            <CardHeader>
+              <CardTitle className="text-center text-gray-900 flex items-center justify-center">
+                <Icon name="CheckCircle" className="mr-2 text-green-600" />
+                Займ оформлен!
+              </CardTitle>
+              <Progress value={100} className="mt-2" />
+            </CardHeader>
+            <CardContent className="space-y-4 text-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="CheckCircle" size={32} className="text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-green-800">Поздравляем!</h3>
+              <p className="text-gray-600">
+                Ваш займ на {formData.amount.toLocaleString()} ₽ успешно оформлен. 
+                Деньги поступят на счет в течение 15 минут.
+              </p>
+              <div className="bg-blue-50 p-4 rounded-2xl text-left">
+                <h4 className="font-semibold mb-2">Номер договора: #МФ-2024-001234</h4>
+                <div className="text-sm space-y-1">
+                  <p>Сумма: {formData.amount.toLocaleString()} ₽</p>
+                  <p>Срок: {formData.term} дней</p>
+                  <p>К возврату: {(formData.amount * 1.24).toLocaleString()} ₽</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl"
+                  onClick={() => window.open('https://microfinans.ru/cabinet', '_blank')}
+                >
+                  <Icon name="ExternalLink" className="mr-2" size={16} />
+                  Перейти в личный кабинет
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="w-full rounded-2xl"
+                  onClick={() => setApplicationStep(0)}
+                >
+                  Оформить еще один займ
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )
+
+      default:
+        return null
+    }
   }
 
   return (
@@ -403,33 +722,8 @@ function Index() {
             <CardContent className="p-12 text-center text-white">
               <h2 className="text-4xl font-bold mb-4">Готовы получить займ?</h2>
               <p className="text-xl mb-8 opacity-90">Подайте заявку прямо сейчас и получите деньги уже сегодня</p>
-              <div id="application-form" className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Card className="bg-white rounded-3xl shadow-2xl max-w-md mx-auto p-6">
-                  <CardHeader>
-                    <CardTitle className="text-center text-gray-900">Заявка на займ</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">ФИО</Label>
-                      <Input id="name" placeholder="Иванов Иван Иванович" className="rounded-2xl" />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">Телефон</Label>
-                      <Input id="phone" placeholder="+7 (999) 123-45-67" className="rounded-2xl" />
-                    </div>
-                    <div>
-                      <Label htmlFor="amount">Сумма займа</Label>
-                      <Input id="amount" placeholder="50 000 ₽" className="rounded-2xl" />
-                    </div>
-                    <div>
-                      <Label htmlFor="term">Срок займа (дней)</Label>
-                      <Input id="term" placeholder="30" className="rounded-2xl" />
-                    </div>
-                    <Button className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl">
-                      Подать заявку
-                    </Button>
-                  </CardContent>
-                </Card>
+              <div id="application-form" className="flex justify-center">
+                {renderApplicationForm()}
               </div>
             </CardContent>
           </Card>
