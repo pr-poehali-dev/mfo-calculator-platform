@@ -26,6 +26,19 @@ function Index() {
     term: 30
   })
 
+  // Состояния для чата
+  const [chatOpen, setChatOpen] = useState(false)
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      text: "Здравствуйте! 👋 Я консультант Анна. Как дела с займом?",
+      isBot: true,
+      time: "Сейчас"
+    }
+  ])
+  const [newMessage, setNewMessage] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+
   // Расчет ежемесячного платежа
   const calculatePayment = () => {
     const rate = 0.15 / 12 // 15% годовых
@@ -337,6 +350,127 @@ function Index() {
       default:
         return null
     }
+  }
+
+  // Функции для чата
+  const sendMessage = () => {
+    if (newMessage.trim()) {
+      const userMessage = {
+        id: chatMessages.length + 1,
+        text: newMessage,
+        isBot: false,
+        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+      }
+      
+      setChatMessages([...chatMessages, userMessage])
+      setNewMessage('')
+      setIsTyping(true)
+
+      // Симуляция ответа бота
+      setTimeout(() => {
+        const botResponses = [
+          "Спасибо за ваш вопрос! Наш специалист свяжется с вами в ближайшее время.",
+          "Для быстрого оформления займа нажмите кнопку 'Оформить заявку' на сайте.",
+          "По всем вопросам звоните: 8 (800) 555-35-35. Работаем круглосуточно!",
+          "Максимальная сумма займа - 500 000 ₽. Минимальная - 5 000 ₽.",
+          "Первый займ под 0% на 30 дней для новых клиентов!"
+        ]
+        
+        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)]
+        const botMessage = {
+          id: chatMessages.length + 2,
+          text: randomResponse,
+          isBot: true,
+          time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+        }
+        
+        setIsTyping(false)
+        setChatMessages(prev => [...prev, botMessage])
+      }, 1500)
+    }
+  }
+
+  const renderChat = () => {
+    if (!chatOpen) return null
+
+    return (
+      <div className="fixed bottom-24 right-4 w-80 h-96 bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col z-50 animate-scale-in">
+        {/* Chat Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-green-600 p-4 rounded-t-3xl flex items-center justify-between text-white">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <Icon name="MessageCircle" size={20} />
+            </div>
+            <div>
+              <div className="font-semibold">Консультант Анна</div>
+              <div className="text-xs opacity-80">Онлайн</div>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setChatOpen(false)}
+            className="text-white hover:bg-white/20 p-2 h-auto"
+          >
+            <Icon name="X" size={16} />
+          </Button>
+        </div>
+
+        {/* Chat Messages */}
+        <div className="flex-1 p-4 overflow-y-auto space-y-3">
+          {chatMessages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
+            >
+              <div
+                className={`max-w-[80%] p-3 rounded-2xl ${
+                  message.isBot
+                    ? 'bg-gray-100 text-gray-800 rounded-bl-md'
+                    : 'bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-br-md'
+                }`}
+              >
+                <div className="text-sm">{message.text}</div>
+                <div className={`text-xs mt-1 ${message.isBot ? 'text-gray-500' : 'text-white/70'}`}>
+                  {message.time}
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="bg-gray-100 p-3 rounded-2xl rounded-bl-md">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Chat Input */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex space-x-2">
+            <Input
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Напишите сообщение..."
+              className="rounded-2xl"
+              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+            />
+            <Button
+              onClick={sendMessage}
+              className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-2xl px-4"
+            >
+              <Icon name="Send" size={16} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -784,6 +918,28 @@ function Index() {
           </div>
         </div>
       </footer>
+
+      {/* Chat Widget */}
+      {renderChat()}
+      
+      {/* Chat Button */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <Button
+          onClick={() => setChatOpen(!chatOpen)}
+          className="w-16 h-16 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 rounded-full shadow-2xl animate-glow"
+        >
+          {chatOpen ? (
+            <Icon name="X" size={24} className="text-white" />
+          ) : (
+            <div className="relative">
+              <Icon name="MessageCircle" size={24} className="text-white" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-xs text-white font-bold">1</span>
+              </div>
+            </div>
+          )}
+        </Button>
+      </div>
     </div>
   )
 }
